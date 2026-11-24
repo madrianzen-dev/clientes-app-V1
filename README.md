@@ -24,6 +24,17 @@ Java 21 + Spring Boot 3.3 + JPA + Thymeleaf. Web y API REST sobre la misma capa 
 Nota: en el plan gratis el servicio se duerme tras unos minutos sin uso y el primer
 acceso tarda. Verifica los limites vigentes de cada plan antes de depender de ellos.
 
+## Probar contra Neon desde tu PC (opcional, antes de Render)
+En PowerShell, en la carpeta del proyecto (la contrasena solo en tu ventana, nunca en archivos):
+
+    $env:SPRING_PROFILES_ACTIVE="prod"
+    $env:DATABASE_URL="jdbc:postgresql://<host>/<base>?sslmode=require"
+    $env:DB_USER="<usuario>"
+    $env:DB_PASSWORD="<contrasena>"
+    mvn spring-boot:run
+
+Registra un cliente, detén la app, vuelve a arrancarla: el cliente debe seguir ahí.
+
 ## Escalar
 Capas separadas (controller / service / repository). Para crecer: agregar Flyway para
 migraciones, Spring Security (login), DTOs en la API y mas servicios sin tocar la web.

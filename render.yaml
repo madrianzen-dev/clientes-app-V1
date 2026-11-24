@@ -1,6 +1,6 @@
-# Render Blueprint: web service con Docker + base PostgreSQL gratuita.
-# Nota: el Postgres free de Render expira a los 30 dias. Para uso continuo gratis,
-# usa Neon o Supabase y pon su cadena en DATABASE_URL (ver README).
+# Render Blueprint: web service con Docker. La base de datos es PostgreSQL en Neon
+# (externa a Render); sus datos de conexion se cargan como variables de entorno
+# en el panel de Render (sync: false = no se guardan en este archivo).
 services:
   - type: web
     name: clientes-app
