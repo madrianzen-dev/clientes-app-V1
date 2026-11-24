@@ -1,0 +1,18 @@
+# Render Blueprint: web service con Docker + base PostgreSQL gratuita.
+# Nota: el Postgres free de Render expira a los 30 dias. Para uso continuo gratis,
+# usa Neon o Supabase y pon su cadena en DATABASE_URL (ver README).
+services:
+  - type: web
+    name: clientes-app
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
