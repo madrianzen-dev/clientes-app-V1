@@ -6,6 +6,7 @@ services:
     name: clientes-app
     runtime: docker
     plan: free
+    region: ohio
     healthCheckPath: /actuator/health
     envVars:
       - key: SPRING_PROFILES_ACTIVE
