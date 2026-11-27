@@ -3,79 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0F1226">
     <title>Registro de clientes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Young+Serif&display=swap" rel="stylesheet">
     <style>
-        :root { --azul:#1f4e8c; --gris:#f3f5f8; --borde:#d5dbe3; --rojo:#b3261e; }
+        :root {
+            --tinta: #0F1226;
+            --linea: #2B3163;
+            --texto: #F1F2FA;
+            --suave: #A3A9CF;
+            --papel: #EDF0F9;
+            --papel-linea: #9EA7D3;
+            --papel-texto: #0F1226;
+            --papel-suave: #454C7E;
+            --muestra: #FFC233;
+            --peligro: #FF8F85;
+            --error: #B3261E;
+            --serif: "Young Serif", Georgia, "Times New Roman", serif;
+            --sans: "Hanken Grotesk", system-ui, "Segoe UI", Roboto, sans-serif;
+        }
+
         * { box-sizing: border-box; }
-        body { font-family: system-ui, sans-serif; background: var(--gris); margin: 0; color: #222; }
-        header { background: var(--azul); color: #fff; padding: 16px 24px; }
-        header h1 { margin: 0; font-size: 1.3rem; }
-        main { max-width: 960px; margin: 24px auto; padding: 0 16px; display: grid; gap: 24px; }
-        section { background: #fff; border: 1px solid var(--borde); border-radius: 8px; padding: 20px; }
-        h2 { margin-top: 0; font-size: 1.1rem; }
-        form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
-        label { display: grid; gap: 4px; font-size: .85rem; font-weight: 600; }
-        input { padding: 8px; border: 1px solid var(--borde); border-radius: 6px; font-size: 1rem; }
-        .error { color: var(--rojo); font-size: .8rem; font-weight: 400; }
-        button { background: var(--azul); color: #fff; border: 0; border-radius: 6px; padding: 10px 16px; cursor: pointer; font-size: 1rem; align-self: end; }
-        button.peligro { background: var(--rojo); padding: 6px 10px; font-size: .85rem; }
+
+        body {
+            margin: 0;
+            background: var(--tinta);
+            color: var(--texto);
+            font-family: var(--sans);
+            line-height: 1.55;
+        }
+
+        /* Banner de muestra */
+        .aviso {
+            background: var(--muestra);
+            color: var(--tinta);
+            text-align: center;
+            padding: .7rem 1rem;
+            font-size: .98rem;
+        }
+        .aviso strong { font-weight: 700; }
+
+        main {
+            max-width: 56rem;
+            margin: 0 auto;
+            padding: clamp(2rem, 6vw, 4.5rem) 1.25rem 3rem;
+        }
+
+        /* Introducción */
+        .intro h1 {
+            font-family: var(--serif);
+            font-weight: 400;
+            font-size: clamp(2.75rem, 8vw, 5.25rem);
+            line-height: .98;
+            letter-spacing: -.015em;
+            margin: 0 0 1.1rem;
+            text-wrap: balance;
+        }
+        .intro p {
+            max-width: 46ch;
+            margin: 0 0 2.5rem;
+            color: var(--suave);
+            font-size: 1.125rem;
+        }
+
+        .flash {
+            background: #D9F2E3;
+            color: #134E2E;
+            border-radius: 12px;
+            padding: .8rem 1.1rem;
+            margin: 0 0 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Ficha del cliente */
+        .ficha {
+            background: var(--papel);
+            color: var(--papel-texto);
+            border-radius: 20px;
+            padding: clamp(1.25rem, 4vw, 2.25rem);
+            margin-bottom: 4rem;
+            box-shadow: 0 24px 48px -24px rgba(0, 0, 0, .65);
+        }
+        .ficha h2 {
+            font-family: var(--serif);
+            font-weight: 400;
+            font-size: 1.5rem;
+            margin: 0 0 .3rem;
+        }
+        .ficha .nota {
+            margin: 0 0 1.75rem;
+            color: var(--papel-suave);
+            font-size: .95rem;
+        }
+        .campos {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem 2rem;
+        }
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: .35rem;
+        }
+        .campo label {
+            font-size: .9rem;
+            font-weight: 600;
+            color: var(--papel-suave);
+        }
+        .campo input {
+            font: inherit;
+            font-size: 1.125rem;
+            color: var(--papel-texto);
+            background: transparent;
+            border: 0;
+            border-bottom: 2px solid var(--papel-linea);
+            border-radius: 0;
+            height: 2.9rem;
+            padding: 0 .1rem;
+        }
+        .campo input:focus { outline: none; border-bottom-color: var(--papel-texto); background: rgba(15, 18, 38, .05); }
+        .campo input:focus-visible { outline: 2px solid var(--papel-texto); outline-offset: 4px; }
+        .campo.invalid input { border-bottom-color: var(--error); }
+        .error {
+            color: var(--error);
+            font-size: .85rem;
+            font-weight: 600;
+        }
+        .accion {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+        .boton {
+            font: inherit;
+            font-weight: 700;
+            color: #fff;
+            background: var(--tinta);
+            border: 0;
+            border-radius: 999px;
+            padding: .9rem 1.75rem;
+            cursor: pointer;
+            transition: background .15s;
+        }
+        .boton:hover { background: #232969; }
+        .boton:focus-visible { outline: 3px solid var(--papel-texto); outline-offset: 3px; }
+
+        /* Lista de clientes */
+        .lista h2 {
+            display: flex;
+            align-items: baseline;
+            gap: .7rem;
+            font-family: var(--serif);
+            font-weight: 400;
+            font-size: 1.75rem;
+            margin: 0 0 1rem;
+        }
+        .cuenta {
+            font-family: var(--sans);
+            font-size: .95rem;
+            font-weight: 600;
+            color: var(--suave);
+            border: 1px solid var(--linea);
+            border-radius: 999px;
+            padding: .05rem .7rem;
+        }
+        .vacio {
+            margin: 0;
+            padding: 2rem 0;
+            border-top: 1px solid var(--linea);
+            color: var(--suave);
+        }
         table { width: 100%; border-collapse: collapse; }
-        th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--borde); }
-        .ok { background: #e6f4ea; border: 1px solid #b7dfc2; padding: 10px 14px; border-radius: 6px; }
-        .vacio { color: #666; }
+        th {
+            text-align: left;
+            font-size: .85rem;
+            font-weight: 500;
+            color: var(--suave);
+            padding: .5rem .75rem .75rem 0;
+            border-bottom: 1px solid var(--linea);
+        }
+        td {
+            padding: 1rem .75rem 1rem 0;
+            border-bottom: 1px solid var(--linea);
+            vertical-align: middle;
+        }
+        td.id { width: 3rem; color: var(--suave); font-variant-numeric: tabular-nums; }
+        td.nombre { font-weight: 600; font-size: 1.05rem; }
+        td.acciones { text-align: right; padding-right: 0; }
+        .quitar {
+            font: inherit;
+            font-size: .9rem;
+            color: var(--texto);
+            background: transparent;
+            border: 1px solid #4A5399;
+            border-radius: 999px;
+            padding: .4rem 1rem;
+            cursor: pointer;
+            transition: color .15s, border-color .15s;
+        }
+        .quitar:hover { color: var(--peligro); border-color: var(--peligro); }
+        .quitar:focus-visible { outline: 3px solid var(--muestra); outline-offset: 3px; }
+        .sr {
+            position: absolute;
+            width: 1px; height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+
+        .pie {
+            max-width: 60ch;
+            margin: 4rem 0 0;
+            color: var(--suave);
+            font-size: .85rem;
+        }
+
+        @media (max-width: 640px) {
+            .campos { grid-template-columns: 1fr; }
+            .accion { justify-content: stretch; }
+            .boton { width: 100%; }
+        }
+        @media (max-width: 720px) {
+            thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+            table, tbody { display: block; }
+            tbody tr {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: .4rem 1rem;
+                padding: 1.1rem 0;
+                border-bottom: 1px solid var(--linea);
+            }
+            td { display: block; padding: 0; border: 0; }
+            td::before {
+                content: attr(data-label);
+                display: block;
+                font-size: .8rem;
+                font-weight: 400;
+                color: var(--suave);
+            }
+            td.id { display: none; }
+            td.acciones { grid-column: 1 / -1; text-align: left; margin-top: .5rem; }
+            td.acciones::before { content: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; }
+        }
     </style>
 </head>
 <body>
-<header><h1>Registro de clientes</h1></header>
-<main>
-    <div class="ok" th:if="${mensaje}" th:text="${mensaje}"></div>
+<div class="aviso" role="note"><strong>Página de muestra.</strong> Llene sus datos.</div>
 
-    <section>
-        <h2>Nuevo cliente</h2>
+<main>
+    <header class="intro">
+        <h1>Registro de clientes</h1>
+        <p>Complete los cuatro datos y pulse Registrar. El cliente aparece en la lista de abajo.</p>
+    </header>
+
+    <p class="flash" role="status" th:if="${mensaje}" th:text="${mensaje}"></p>
+
+    <section class="ficha" aria-labelledby="t-ficha">
+        <h2 id="t-ficha">Datos del cliente</h2>
+        <p class="nota">Todos los campos son obligatorios.</p>
         <form th:action="@{/clientes}" th:object="${cliente}" method="post">
-            <label>Nombre
-                <input type="text" th:field="*{nombre}">
-                <span class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
-            </label>
-            <label>Apellido
-                <input type="text" th:field="*{apellido}">
-                <span class="error" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></span>
-            </label>
-            <label>Fecha de nacimiento
-                <input type="date" th:field="*{fechaNacimiento}">
-                <span class="error" th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}"></span>
-            </label>
-            <label>Nacionalidad
-                <input type="text" th:field="*{nacionalidad}">
-                <span class="error" th:if="${#fields.hasErrors('nacionalidad')}" th:errors="*{nacionalidad}"></span>
-            </label>
-            <button type="submit">Registrar</button>
+            <div class="campos">
+                <div class="campo" th:classappend="${#fields.hasErrors('nombre')} ? 'invalid' : ''">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" th:field="*{nombre}" autocomplete="given-name">
+                    <span class="error" role="alert" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                </div>
+                <div class="campo" th:classappend="${#fields.hasErrors('apellido')} ? 'invalid' : ''">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" th:field="*{apellido}" autocomplete="family-name">
+                    <span class="error" role="alert" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></span>
+                </div>
+                <div class="campo" th:classappend="${#fields.hasErrors('fechaNacimiento')} ? 'invalid' : ''">
+                    <label for="fechaNacimiento">Fecha de nacimiento</label>
+                    <input type="date" th:field="*{fechaNacimiento}" autocomplete="bday">
+                    <span class="error" role="alert" th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}"></span>
+                </div>
+                <div class="campo" th:classappend="${#fields.hasErrors('nacionalidad')} ? 'invalid' : ''">
+                    <label for="nacionalidad">Nacionalidad</label>
+                    <input type="text" th:field="*{nacionalidad}" autocomplete="country-name">
+                    <span class="error" role="alert" th:if="${#fields.hasErrors('nacionalidad')}" th:errors="*{nacionalidad}"></span>
+                </div>
+            </div>
+            <div class="accion">
+                <button class="boton" type="submit">Registrar cliente</button>
+            </div>
         </form>
     </section>
 
-    <section>
-        <h2>Clientes registrados (<span th:text="${#lists.size(clientes)}">0</span>)</h2>
-        <p class="vacio" th:if="${#lists.isEmpty(clientes)}">Aún no hay clientes.</p>
+    <section class="lista" aria-labelledby="t-lista">
+        <h2 id="t-lista">Clientes registrados <span class="cuenta" th:text="${#lists.size(clientes)}">0</span></h2>
+        <p class="vacio" th:if="${#lists.isEmpty(clientes)}">Todavía no hay clientes. Registre el primero con el formulario de arriba.</p>
         <table th:unless="${#lists.isEmpty(clientes)}">
             <thead>
-            <tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Nacimiento</th><th>Nacionalidad</th><th></th></tr>
+            <tr>
+                <th scope="col">N.º</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Nacimiento</th>
+                <th scope="col">Nacionalidad</th>
+                <th scope="col"><span class="sr">Acciones</span></th>
+            </tr>
             </thead>
             <tbody>
             <tr th:each="c : ${clientes}">
-                <td th:text="${c.id}"></td>
-                <td th:text="${c.nombre}"></td>
-                <td th:text="${c.apellido}"></td>
-                <td th:text="${#temporals.format(c.fechaNacimiento, 'dd/MM/yyyy')}"></td>
-                <td th:text="${c.nacionalidad}"></td>
-                <td>
-                    <form th:action="@{/clientes/{id}/eliminar(id=${c.id})}" method="post">
-                        <button class="peligro" type="submit">Eliminar</button>
+                <td class="id" th:text="${c.id}">1</td>
+                <td class="nombre" data-label="Nombre" th:text="${c.nombre}">Ana</td>
+                <td data-label="Apellido" th:text="${c.apellido}">Torres</td>
+                <td data-label="Nacimiento" th:text="${#temporals.format(c.fechaNacimiento, 'dd/MM/yyyy')}">17/05/1990</td>
+                <td data-label="Nacionalidad" th:text="${c.nacionalidad}">Peruana</td>
+                <td class="acciones">
+                    <form th:action="@{/clientes/{id}/eliminar(id=${c.id})}" method="post"
+                          th:attr="data-nombre=${c.nombre + ' ' + c.apellido}">
+                        <button class="quitar" type="submit">Eliminar</button>
                     </form>
                 </td>
             </tr>
             </tbody>
         </table>
     </section>
+
+    <p class="pie">Esta es una página de muestra: los datos se guardan en una base de pruebas.</p>
 </main>
+
+<script>
+    document.querySelectorAll('form[data-nombre]').forEach(function (f) {
+        f.addEventListener('submit', function (e) {
+            if (!window.confirm('¿Eliminar a ' + f.dataset.nombre + '?')) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
 </body>
 </html>
